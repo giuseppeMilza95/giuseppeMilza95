@@ -29,78 +29,122 @@ public class Main {
         randomShipPosition(grid);
         randomShipPosition(computergrid);
 
-        boolean game= true;
+        boolean game = true;
         String turn = "player";
-        int choice = 0;
-        while(game){
 
+        while (game) {
+            int choice = 0;
 
-                printMenu();
+            printMenu();
+            while(true) {
                 try {
                     System.out.println("Enter your choice");
                     choice = scanner.nextInt();
-                }catch(Exception e){
+                    break;
+                } catch (Exception e) {
                     System.out.println("Please enter a valid integer.");
                     scanner.nextLine();
                 }
+            }
 
-                switch (choice) {
-                    case 1:
-                        game = false;
-                        break;
-                    case 2:
+            switch (choice) {
+                case 1:
+                    game = false;
+                    break;
+                case 2:
 
-                            if (turn == "player") {
-                                System.out.println("Computer board");
-                                printBoard(hits);
-                                System.out.println("Your board");
-                                printBoard(grid);
+                    if (turn == "player") {
+                        System.out.println("Computer board");
+                        printBoard(hits);
+                        System.out.println("Your board");
+                        printBoard(grid);
+                        int x = 0;
+                        String y = "";
+                        int column = 0;
+                        while (true) {
+                            try {
 
                                 System.out.println("Enter coordinate row: ");
-                                int x = scanner.nextInt();
-                                System.out.println("Enter coordinate column: ");
-                                String y = scanner.next();
-                                int column = dictionary.get(y.toUpperCase());
-                                int hitResult = hit(x, column, computergrid);
-                                if (hitResult == 1) {
-                                    hits[x][column] = " H ";
-                                    turn = "computer";
-                                } else if (hitResult == 0) {
-                                    hits[x][column] = " W ";
-                                    turn = "computer";
-                                } else if (!checkWin(grid)) {
-                                    game = false;
+
+                                x = scanner.nextInt();
+                                if (x <=9){
+                                    break;
                                 } else {
-                                    turn = "player";
+                                    throw new Exception();
                                 }
+
+
+
+                            } catch (Exception e) {
+                                System.out.println("Please enter a valid number");
+                                scanner.nextLine();
                             }
-
-
-                            System.out.println("-------------hits_Greed------------");
-                            printBoard(hits);
-                            System.out.println("-------------Player grid------------");
-                            printBoard(grid);
-
-                            if (turn == "computer") {
-                                System.out.println("I am here");
-                                while (hit(ran.nextInt(10), ran.nextInt(10), grid) == 1)
-
-
-                                    if (!checkWin(computergrid)) {
-                                        game = false;
-                                    }
-                            }
-
-
-
                         }
-                }
+
+                        while (true) {
+                            try {
+                                System.out.println("Enter coordinate column: ");
+                                y = scanner.next();
+                                column = dictionary.get(y.toUpperCase());
+                                break;
+                            } catch (Exception e) {
+                                System.out.println("Invalid letter");
+                                scanner.nextLine();
+                            }
+                        }
 
 
 
+                        int hitResult = hit(x, column, computergrid);
+                        if (hitResult == 1) {
+                            hits[x][column] = " H  ";
+                            System.out.println("Well done! You hit the boat");
+                            turn = "computer";
+                        } else if (hitResult == 0) {
+                            hits[x][column] = " W  ";
+                            System.out.println("Water");
+                            turn = "computer";
+                        } else if (!checkWin(grid)) {
+                            System.out.println("Player One Won !!");
+                            game = false;
+                        } else {
+                            System.out.println("Place already hit, check the hit grid");
+                            turn = "player";
+                        }
+                    }
 
 
+                    System.out.println("-------------hits_Greed------------");
+                    printBoard(hits);
+                    System.out.println("-------------Player grid------------");
+                    printBoard(grid);
+
+                    if (turn == "computer") {
+                        System.out.println("I am here");
+                        int ranRow = ran.nextInt(10);
+                        int ranColumn = ran.nextInt(10);
+
+                        while (hit(ranRow, ranColumn, grid)==1 || hit(ranRow, ranColumn, grid)==0);
+
+
+                        turn = "player";
+
+
+                            if (!checkWin(computergrid)) {
+                                System.out.println("The computer Won");
+                                game = false;
+                            }
+                    }
+
+
+            }
         }
+
+    }
+
+
+
+
 
 
 
@@ -146,7 +190,7 @@ public class Main {
                       return true;
                   }
               } catch (Exception e) {
-                  System.out.println("The boat cannot be palced here because exceed the length of the board");
+                  //System.out.println("The boat cannot be palced here because exceed the length of the board");
 
               }
 
@@ -161,7 +205,7 @@ public class Main {
                       return true;
                   }
               } catch (Exception e) {
-                  System.out.println("The boat cannot be placed here because exceed the length of the board or the place is already taken");
+                  //System.out.println("The boat cannot be placed here because exceed the length of the board or the place is already taken");
               }
 
           }
@@ -235,17 +279,17 @@ public class Main {
             grid[x][y] = " H  ";
             return 1;
         }
-        else if(x < 10 && y < 10 && grid[x][y] != " W  "){
+        else if(x < 10 && y < 10 && grid[x][y] == null){
             grid[x][y] = " W  ";
             return 0;
 
         }
         else if (grid[x][y] == " W  "){
-            System.out.println("Place already try again");
+            //System.out.println("Place already try again");
             return 2;
         }
         else if(grid[x][y] == " H  "){
-            System.out.println("Place already hit, try again");
+            //System.out.println("Place already hit, try again");
             return 2;
         }
         else{
